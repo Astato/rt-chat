@@ -1,0 +1,16 @@
+doctype html
+html
+  head
+    title= title
+    link(rel='stylesheet', href='/stylesheets/style.css', type="text/css")
+  body(style=`background-color: ${settings && settings.body_bg ? settings.body_bg : ""}; color: ${settings &&  settings.all_tc ? settings.all_tc : ""}`)
+    script( src="/socket.io/socket.io.js")
+    script( src="https://cdnjs.cloudflare.com/ajax/libs/dompurify/3.0.6/purify.min.js" integrity="sha512-H+rglffZ6f5gF7UJgvH4Naa+fGCgjrHKMgoFOGmcPTRwR6oILo5R+gtzNrpDp7iMV3udbymBVjkeZGNz1Em4rQ==" crossorigin="anonymous" referrerpolicy="no-referrer")
+    script( src="https://cdnjs.cloudflare.com/ajax/libs/tinycolor/1.6.0/tinycolor.min.js" integrity="sha512-AvCfbOQzCVi2ctVWF4m89jLwTn/zVPJuS7rhiKyY3zqyCdbPqtvNa0I628GJqPytbowfFjkAGOpq85E5kQc40Q==" crossorigin="anonymous" referrerpolicy="no-referrer")
+    div#root
+      block sidebar
+      block content
+      block login
+      block signup
+  script(src="/javascripts/handleProfile.js") 
+    

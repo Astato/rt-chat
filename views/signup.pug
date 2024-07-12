@@ -1,0 +1,36 @@
+extends layout 
+block signup 
+  - console.log(errorMessage)
+  if creedentialsChange
+    div.singup
+      h3 #{creedentialsChange}
+      p redirecting back in 3s
+      script.
+        setTimeout(() => {
+          window.location.href = "/"
+        },3000)
+  else if creedentialsChangeError 
+    div.signup
+      h3 #{creedentialsChangeError}
+      p redirecting back in 1s
+      script.
+        setTimeout(() => {
+          window.location.href = "/"
+        },1000)
+  else if errorMessage
+    div.errorMessage.signup
+      h3 #{errorMessage}
+      p redirecting to login screen in 2s
+      script.
+        setTimeout(() => {
+          window.location.href = "/sign-in"
+        },2000)
+  else    
+    div#signup-container
+      h3 Account succesfully created
+      p redirecting to login screen in 2s
+      script.
+        setTimeout(() => {
+          window.location.href = "/sign-in"
+        },2000)
+

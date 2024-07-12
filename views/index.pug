@@ -1,0 +1,114 @@
+extends layout
+block content
+  div#chat-container(style=`background-color: ${settings && settings.accent_bg ? settings.accent_bg: ""}`)
+    div#chat-messages
+      if !chatsbubbles
+        div 
+      if chatsbubbles
+        each chat in chatsbubbles
+          if chat.name === username
+            div.user-bubble(style=`background-color: ${settings && settings.userbubble_bg ? settings.userbubble_bg : ""}; color: ${settings && settings.bubbles_tc ? settings.bubbles_tc : ""}`)
+              p.message-name #{chat.name}:
+              p.messge-time #{chat.time.toLocaleString()}
+              p.message-text #{chat.message}
+          else 
+            div.chat-bubble(style=`background-color: ${settings && settings.chatbubble_bg ? settings.chatbubble_bg : ""}; color: ${settings && settings.bubbles_tc ? settings.bubbles_tc : ""}`)
+              p.message-name #{chat.name}:
+              p.message-time #{chat.time.toLocaleString()}
+              p.message-text #{chat.message}
+    form#chat-text-input-container(style="box-shadow: 0 -6px 4px -6px")
+      h2#chat-selected-label(style="margin-top: 0.5rem; margin-bottom:1rem") Global
+      div(style="display:flex")
+        textarea(name="chat", rows="5", id="chat-textinput", value="" style=`color: ${settings && settings.texarea_tc ? settings.textarea_tc : ""}` ) 
+        button#submit-message(type="submit",style="background-color:transparent; padding:0; margin: auto 1rem auto 0; border-radius:100%  ")
+          img#message-svg(src="images/send_icon.svg", alt="Send" style="width:30px; height:30px; filter: invert(1)")
+  script( src="/javascripts/handleMessageSubmit.js")
+
+
+block sidebar 
+  div#sidebar(style=`background-color: ${settings  && settings.accent_bg ? settings.accent_bg: ""}`)
+    if username
+      div#profile
+        h2#username #{username}
+        button#logout Log out
+        button#settings-btn(style="border-radius:100%; padding: 0; display:flex; align-items:center; background-color:transparent")
+          img#settings-svg(src="images/settings_icon.svg" alt="Settings" style="width:24px; height:24px; filter:invert(1)")
+        div#settings-container(style=`background-color: ${settings && settings.accent_bg ? settings.accent_bg: ""}`)
+          h2 Options
+          div
+            h3 Sound
+              p#volume #{settings && settings.volume ? settings.volume+"%" : "100%"}
+              input#volume-slider(type="range" min="0", max="100" value=`${settings && settings.volume ? settings.volume : "100"}` label="100%" step="5")
+            h3 Customize
+            div#custom-theme
+              label Background
+                input#body-color-picker(type="color" value=`${settings && settings.body_bg ? settings.body_bg: ""}`)
+              label Accent Color
+                input#accent-color-picker(type="color" value=`${settings && settings.accent_bg ? settings.accent_bg: ""}`)
+              label Text
+                input#text-color-picker(type="color" value=`${settings && settings.all_tc ? settings.all_tc: ""}`)
+              label Sent Message
+                input#sent-color-picker(type="color" value=`${settings && settings.chatbubble_bg ? settings.chatbubble_bg: ""}`)
+              label Recieved Message
+                input#recieved-color-picker(type="color" value=`${settings && settings.userbubble_bg ? settings.userbubble_bg: ""}`)
+              label Bubbles text
+                input#bubbles-text-color-picker(type="color" value=`${settings && settings.chat_bg ? settings.chat_bg: ""}`)
+              label Chat Background
+                input#chat-color-picker(type="color" value=`${settings && settings.all_tc ? settings.all_tc: ""}`)
+              label Chat text
+                input#chat-text-color-picker(type="color" value=`${settings && settings.textarea_tc ? settings.textarea_tc: ""}`)
+              label(style="width:90%; display:flex")  
+                button#save-theme Save
+                button#reset-colors Reset 
+                button#default-theme Default 
+              div(style="display:flex;grid-column:span 2") 
+                div.user-bubble#test-userbubble
+                  p.message-name Sent
+                  p.messge-time 10/24/2023, 4:17:59 AM
+                  p.message-text This is a message
+                div.chat-bubble#test-chatbubble
+                  p.message-name Recieved
+                  p.message-time 10/24/2023, 4:17:59 AM
+                  p.message-text This is a message
+            h2 Profile
+            h3 Change Password: 
+            form#change-password-form.new-creedentials-form(method="POST" action="/profile/change-creedentials")
+              label(for="currentPassword") *Current Password: 
+              input#currentPassword(type="password" name="currentPassword" autocomplete="current-password" required="true")
+              label(for="newPassword") *New Password: 
+              input#newPassword(type="password" name="newPassword" autocomplete="new-password" required="true")
+              label(for="newPasswordConfirm") *Confirm Password: 
+              input#newPasswordConfirm(type="password" name="confirmChange" autocomplete="new-password" required="true")    
+              button(type="submit") Apply
+            h3 Change Email 
+            form#change-email-form.new-creedentials-form(method="POST" action="/profile/change-creedentials" style="padding-bottom:3rem")
+              label(for="newEmail") *New email:
+              input#newEmail(type="email" name="newEmail" required="true" autocomplete="new-email" )
+              label(for="newEmailConfirm") *Confirm Email
+              input#newEmailConfirm(type="email" name="newEmailConfirm" required="true" autocomplete="new-email")
+              label(for="emailChangePassword") Password:
+              input#emailChangePassword(type="password" name="currentPassword" required="true" value="")
+              button(type="submit") Change
+    hr
+    h3#addFriendError(style="color:orange; width:fit-content; margin-bottom: 0")
+    div#add-friend-container
+      h3 Friends
+      button#open-friend-dialog +
+      div#add-friend-dialog(style="display:none")
+        label(for="addfriendemail") Email:
+        input#addfriendemail(type="email", name="addfriendemail", required="true" style="margin-top: .5rem")
+        div(style="margin-top: .5rem")
+          button(type='button', style="margin-right: 1rem")#add-friend-btn Add
+          button#close-add-friend Cancel
+    
+    ul(style="max-height: 40%; overflow-y: auto; margin-top:0")
+      if friends 
+        each friend in friends 
+          li.friend-list-item #{friend}
+            if unreadTarget === username
+              p.new-message-indicator New (#{unreadCount})
+    hr
+    h3#global-chat.focused Global (Online):
+    ul#sidebar-chat-group
+  script(src="/javascripts/handleAddChat.js") 
+  script(src="/javascripts/handleAddFriend.js") 

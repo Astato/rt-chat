@@ -1,0 +1,41 @@
+extends layout
+block login
+  dialog#dialog(open)
+    if recovery
+      form#pass-recovery-form(method="POST" action="/password-recovery")
+        h2 Password Recovery
+        label(for="emailRecovery") Email:
+        input(type="email" name="emailRecovery" id="email-recovery" style="font-size:21px")
+        button(style= "width:fit-content; margin:auto") Reset Password
+        if data 
+          h3#success-recovery Password sucessfully restored, check your email!
+          a(href="/login") Back to login
+
+        if !data
+          h3#unsucessful-recovery Sorry. there was an error restoring your passsword
+    else
+      div#login-form-container
+        if message
+          div.errorMessage#incorrect-data
+            h3 #{message[message.length-1]}
+        a#backto-login-anchor(hidden=true ariaHidden=true) < Back
+        h1#login-title() Sign in 
+        form#login-form(method="POST" action="/sign-in")
+          input#login-action(name="loginAction" hidden=true ariaHidden=true )
+          label.hiddable(for="username" hidden=true ariaHidden=true) Username:
+          input.login-input.hiddable(type="text", name="username" hidden=true ariaHidden=true)
+          label(for="email") Email:
+          input.login-input#email-input(type="email", name="email" )
+          label.hiddable(for="confirmEmail" hidden=true ariaHidden=true) Confirm Email:
+          input.login-input.hiddable#email-confirm-input(type="email", name="confirmEmail" hidden=true ariaHidden=true  )
+          label(for="password") Password:
+          input.login-input#password-input(type="password", name="password" required )
+          label.hiddable(for="confirmPassword" hidden=true aria-hidden=true) Confirm Password:
+          input.login-input.hiddable#password-confirm-input(type="password", name="confirmPassword" hidden=true aria-hidden=true )
+          button#login-btn(type="submit") Sign In
+
+        //- div!= captcha 
+        a.login-anchor#signup-btn(style="font-weight: bolder") Don't have an account? Sign Up
+        a.login-anchor#password-recovery(href="/password-recovery") I forgot my password
+
+  script(src="/javascripts/handleLoginForm.js") 
